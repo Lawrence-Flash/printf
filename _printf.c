@@ -1,8 +1,6 @@
 #include "main.h"
-#include <stdio.h>
-
 /**
- * _printf - custom printf function with limited functionality.
+ * _printf - printf function with limited functionality.
  * @format: Format string with directives
  *
  * Description: this function produces output according to a format string
@@ -16,7 +14,7 @@
 
 int _printf(const char *format, ...)
 {
-	int co = 0;
+	int co = 0;i
 	va_list args;
 	int i;
 
@@ -36,34 +34,24 @@ int _printf(const char *format, ...)
 			{
 				case 'c':
 				{
-					char c = va_arg(args, int);
-					_putchar(c);
-					co++;
+					co += _putchar(va_arg(args, int));
 					break;
 				}
 				case 's':
 				{
-					char *str = va_arg(args, char *);
-					while (*str)
-					{
-						_putchar(*str++);
-						co++;
-					}
-					break;
+					co += _puts(va_arg(args, char *), 4096);
 				}
 				case '%':
 				{
-					_putchar('%');
-					co++;
+					co += _putchar('%');
 					break;
 				}
 				default:
 				{
-					_putchar('%');
-					_putchar(format[i]);
-					co += 2;
+					co += _putchar('%');
+					co += _putchar(format[i]);
 					break;
-				}
+				
 			}
 		}
 	}
