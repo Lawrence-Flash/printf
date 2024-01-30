@@ -57,6 +57,7 @@ int _printf(const char *format, ...)
 int handle_non_printable_str(const char *arg, char *buffer)
 {
 	int count = 0;
+	char hex[3];
 	int i = 0;
 
 	while (arg[i] != '\0')
@@ -66,7 +67,6 @@ int handle_non_printable_str(const char *arg, char *buffer)
 			buffer[count++] = '\\';
 			buffer[count++] = 'x';
 			
-			char hex[3];
 			sprintf(hex, "%02X", (unsigned char)arg[i]);
 			count += handle_str(hex, buffer);
 		}
@@ -191,7 +191,9 @@ int handle_percent(char *buffer)
  */
 int handle_int(int arg, char *buffer)
 {
-	int count = sprintf(buffer, "%d", arg);
+	int count;
+
+	count = sprintf(buffer, "%d", arg);
 	return count;
 }
 
@@ -241,20 +243,23 @@ int handle_custom_specifier(char specifier, va_list args, char *buffer, char **s
  */
 int handle_binary(unsigned int arg, char *buffer)
 {
+	int num_bits = 0;
+	unsigned int temp = arg;
+	int i;
+
 	if (arg == 0)
 	{
 		buffer[0] = '0';
 		return 1;
 	}
 
-	int num_bits = 0;
-	unsigned int temp = arg;
 	while (temp > 0)
 	{
 		temp >>= 1;
 		num_bits++;
 	}
-	int i;
+	
+
 	for (i = num_bits - 1; i >= 0; i--)
 	{
 		buffer[num_bits - 1 - i] = ((arg >> i) & 1) ? '1' : '0';
@@ -272,19 +277,22 @@ int handle_binary(unsigned int arg, char *buffer)
  */
 int handle_reversed_str(const char *arg, char *buffer)
 {
+	int length = 0;
+	int i, j;
+	char temp;
+	
 	if (arg == NULL)
 		return 0;
 
-	int length = 0;
+
 	while (arg[length] != '\0')
 	{
 		length++;
 	}
 	
-	int i, j;
 	for (i = 0, j = length - 1; i < j; i++, j--)
 	{
-		char temp = arg[i];
+		temp = arg[i];
 		buffer[i] = arg[j];
 		buffer[j] = temp;
 	}
@@ -302,11 +310,14 @@ int handle_reversed_str(const char *arg, char *buffer)
 
 int handle_rot13_str(const char *arg, char *buffer)
 {
-	if (arg == NULL)
-		return 0;
 	int count = 0;
 	char current_char;
 	char base;
+
+
+	if (arg == NULL)
+		return 0;
+
 	while(arg[count] != '\0')
 	{
 		current_char = arg[count];

@@ -21,7 +21,7 @@ int _puts(char *str)
 {
 	int count = 0;
 
-	while (*str && count < max_length)
+	while (*str)
 	{
 		count += _putchar(*str);
 		str++;
